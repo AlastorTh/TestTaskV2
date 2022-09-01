@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	"flag"
+	"fmt"
 	"io"
 	"net/http"
 	"strconv"
@@ -197,7 +199,11 @@ func (h *brokerHandler) Get(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 
-    
+	port := flag.Int("port", 8080, "port to start the server on")
+	flag.Parse()
+	if *port < 0 || *port > 65536 {
+		*port = 8080
+	}
 	b := NewBroker()
 	defer func() { b.Close(context.TODO()) }()
 	h := brokerHandler{b}
